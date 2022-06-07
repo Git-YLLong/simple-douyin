@@ -11,14 +11,11 @@ import (
 
 func Register(c *gin.Context) {
 	var registerVar UserParam
-	// Query Params取参数，demo比较奇葩
 	registerVar.UserName = c.Query("username")
 	registerVar.PassWord = c.Query("password")
 
-	var token = ""
-
 	if len(registerVar.UserName) == 0 || len(registerVar.PassWord) == 0 {
-		LoginResponse(c, errno.ParamErr, 0, token)
+		LoginResponse(c, errno.ParamErr, 0, "")
 		return
 	}
 
@@ -26,9 +23,11 @@ func Register(c *gin.Context) {
 		Username: registerVar.UserName,
 		Password: registerVar.PassWord,
 	})
+
 	if err != nil {
-		LoginResponse(c, errno.ConvertErr(err), 0, token)
+		LoginResponse(c, errno.ConvertErr(err), 0, "")
 		return
 	}
+
 	LoginResponse(c, errno.Success, id, token)
 }

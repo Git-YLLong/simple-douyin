@@ -1,5 +1,19 @@
 # 本地测试url
+# http-server -p 8088 &
+# netstat -anp | grep 8088
+# kitex -module github.com/Git-YLLong/simple-douyin idl/core.thrift
+# kitex -module github.com/Git-YLLong/simple-douyin -service coreservice idl/core.thrift
+# curl -X POST http://127.0.0.1:8080/upload -F "upload=路径" -H "Content-Type: multipart/form-data"
 
-POST http://127.0.0.1:8080/douyin/user/register/?username=test&password=123456 HTTP/1.1
+POST http://127.0.0.1:8080/douyin/user/register/?username=test2&password=123456 HTTP/1.1
 
-# 
+### 
+
+POST http://127.0.0.1:8080/douyin/user/login/?username=test1&password=123456 HTTP/1.1
+
+###
+
+GET http://127.0.0.1:8080/douyin/user/?user_id=2602173212921856&token=
+
+###
+GET http://127.0.0.1:8088/cover.jpg

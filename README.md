@@ -48,7 +48,7 @@ sh run.sh
 - douyin/core：基础接口服务端
     - dal：数据库操作
     - output：自动生成的，不用管
-    - pack：一些工具包，我现在写的有jwt生成token（这个不知道要不要用gin的jwt扩展代替，先凑合用着吧），还有雪花算法生成唯一id
+    - pack：一些工具包，雪花算法生成唯一id
     - script：运行build.sh自动生成
     - service：服务端业务调用操作数据库
     - build.sh：kitex自动生成
@@ -64,6 +64,7 @@ sh run.sh
 - pkg
     - constants：一些常量定义
     - errno：自定义错误类型
+    - jwt：鉴权，生成token与解析token（这个不知道要不要用gin的jwt扩展代替，先凑合用着吧）
     - middleware：kitex中间件，返回client、server运行信息
     - tracer：jaeger链路追踪
 - public：存放一些本地视频

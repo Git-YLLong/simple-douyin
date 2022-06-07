@@ -1,6 +1,6 @@
 namespace go core
 
-// 公共返回值（减少重复代码）
+// 公共返回值
 struct BaseResp {
     1: i32 status_code  // 状态码，0-成功，其它-失败
     2: optional string status_msg  // 返回状态描述
@@ -17,7 +17,7 @@ struct User {
 
 struct douyin_user_request {
     1: i64 user_id   // 用户id
-    2: string token   // 用户鉴权token
+    2: string token   // 用户鉴权token，可去
 }
 
 struct douyin_user_response {
@@ -63,21 +63,22 @@ struct douyin_user_login_response {
 
 // 视频流请求
 struct douyin_feed_request {
-    1: optional i64 latest_time  // 限制返回视频的最新投稿时间戳，精确到秒，不填表示当前时间
-    2: optional string token   // 登录用户设置
+    1: i64 latest_time  // 限制返回视频的最新投稿时间戳，精确到秒，不填表示当前时间
+    2: string token   // 登录用户设置
 }
 
 struct douyin_feed_response {
     1: BaseResp base_resp
     3: list<Video> video_list  // 视频列表
-    4: optional i64 next_time  // 本次返回的视频中，发布最早的时间，作为下次请求时的latest_time
+    4: i64 next_time  // 本次返回的视频中，发布最早的时间，作为下次请求时的latest_time
 }
 
 // 视频投稿请求
 struct douyin_publish_action_request {
     1: string token   // 用户鉴权token
-    2: binary data   // 视频数据（字节数组）
+    2: string play_url   // 播放链接
     3: string title  // 视频标题
+    4: i64 author_id // 作者id
 }
 
 struct douyin_publish_action_response {
@@ -92,7 +93,18 @@ struct douyin_publish_list_request {
 
 struct douyin_publish_list_response {
     1: BaseResp base_resp
-    3: list<Video> video_list   // 用户发布的视频列表
+    3: list<Video> video_list   // 登录用户发布的视频列表
+}
+
+// 查看点赞列表请求
+struct douyin_favorite_list_request{
+    1: i64 user_id
+    2: string token
+}
+
+struct douyin_favorite_list_response {
+    1: BaseResp base_resp
+    2: list<Video> video_list   // 登录用户点赞的视频列表
 }
 
 service CoreService {   // 用户服务
@@ -102,4 +114,5 @@ service CoreService {   // 用户服务
     douyin_feed_response GetVideoFeed(1:douyin_feed_request req)  // 获取视频流推送
     douyin_publish_action_response PublishVideo(1:douyin_publish_action_request req)  // 视频投稿
     douyin_publish_list_response GetPublishedList(1:douyin_publish_list_request req)  // 已发布视频列表
+    douyin_favorite_list_response GetFavoriteList(1:douyin_favorite_list_request req) // 点赞的视频列表
 }

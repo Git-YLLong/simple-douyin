@@ -25,6 +25,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"GetVideoFeed":     kitex.NewMethodInfo(getVideoFeedHandler, newCoreServiceGetVideoFeedArgs, newCoreServiceGetVideoFeedResult, false),
 		"PublishVideo":     kitex.NewMethodInfo(publishVideoHandler, newCoreServicePublishVideoArgs, newCoreServicePublishVideoResult, false),
 		"GetPublishedList": kitex.NewMethodInfo(getPublishedListHandler, newCoreServiceGetPublishedListArgs, newCoreServiceGetPublishedListResult, false),
+		"GetFavoriteList":  kitex.NewMethodInfo(getFavoriteListHandler, newCoreServiceGetFavoriteListArgs, newCoreServiceGetFavoriteListResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName": "core",
@@ -148,6 +149,24 @@ func newCoreServiceGetPublishedListResult() interface{} {
 	return core.NewCoreServiceGetPublishedListResult()
 }
 
+func getFavoriteListHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*core.CoreServiceGetFavoriteListArgs)
+	realResult := result.(*core.CoreServiceGetFavoriteListResult)
+	success, err := handler.(core.CoreService).GetFavoriteList(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newCoreServiceGetFavoriteListArgs() interface{} {
+	return core.NewCoreServiceGetFavoriteListArgs()
+}
+
+func newCoreServiceGetFavoriteListResult() interface{} {
+	return core.NewCoreServiceGetFavoriteListResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -213,6 +232,16 @@ func (p *kClient) GetPublishedList(ctx context.Context, req *core.DouyinPublishL
 	_args.Req = req
 	var _result core.CoreServiceGetPublishedListResult
 	if err = p.c.Call(ctx, "GetPublishedList", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetFavoriteList(ctx context.Context, req *core.DouyinFavoriteListRequest) (r *core.DouyinFavoriteListResponse, err error) {
+	var _args core.CoreServiceGetFavoriteListArgs
+	_args.Req = req
+	var _result core.CoreServiceGetFavoriteListResult
+	if err = p.c.Call(ctx, "GetFavoriteList", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

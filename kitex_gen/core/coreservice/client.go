@@ -17,6 +17,7 @@ type Client interface {
 	GetVideoFeed(ctx context.Context, req *core.DouyinFeedRequest, callOptions ...callopt.Option) (r *core.DouyinFeedResponse, err error)
 	PublishVideo(ctx context.Context, req *core.DouyinPublishActionRequest, callOptions ...callopt.Option) (r *core.DouyinPublishActionResponse, err error)
 	GetPublishedList(ctx context.Context, req *core.DouyinPublishListRequest, callOptions ...callopt.Option) (r *core.DouyinPublishListResponse, err error)
+	GetFavoriteList(ctx context.Context, req *core.DouyinFavoriteListRequest, callOptions ...callopt.Option) (r *core.DouyinFavoriteListResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -76,4 +77,9 @@ func (p *kCoreServiceClient) PublishVideo(ctx context.Context, req *core.DouyinP
 func (p *kCoreServiceClient) GetPublishedList(ctx context.Context, req *core.DouyinPublishListRequest, callOptions ...callopt.Option) (r *core.DouyinPublishListResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.GetPublishedList(ctx, req)
+}
+
+func (p *kCoreServiceClient) GetFavoriteList(ctx context.Context, req *core.DouyinFavoriteListRequest, callOptions ...callopt.Option) (r *core.DouyinFavoriteListResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.GetFavoriteList(ctx, req)
 }

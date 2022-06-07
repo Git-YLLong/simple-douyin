@@ -40,17 +40,54 @@ func initUserRpc() {
 	userClient = c
 }
 
-// 客户端，向服务端传递前端返回值
+// Client端，调用远程服务方法
+
+// 注册用户，提供账号密码，获取生成的用户ID和Token
 func Register(ctx context.Context, req *core.DouyinUserRegisterRequest) (int64, string, error) {
 	resp, err := userClient.Register(ctx, req)
-	id := resp.UserId
+	userId := resp.UserId
 	token := resp.Token
 	if err != nil {
-		return id, token, err
+		return userId, token, err
 	}
 	if resp.BaseResp.StatusCode != 0 {
-		return id, token, errno.NewErrNo(resp.BaseResp.StatusCode, *resp.BaseResp.StatusMsg)
+		return userId, token, errno.NewErrNo(resp.BaseResp.StatusCode, *resp.BaseResp.StatusMsg)
 	}
 
-	return id, token, nil
+	return userId, token, nil
+}
+
+// 登录，提供账号密码，获取server校验结果
+func Login(ctx context.Context, req *core.DouyinUserLoginRequest) (int64, string, error) {
+
+	resp, err := userClient.Login(ctx, req)
+	userId := resp.UserId
+	token := resp.Token
+
+	if err != nil {
+		return userId, token, err
+	}
+
+	if resp.BaseResp.StatusCode != 0 {
+		return userId, token, errno.NewErrNo(resp.BaseResp.StatusCode, *resp.BaseResp.StatusMsg)
+	}
+
+	return userId, token, nil
+}
+
+// 提供用户Id，获取用户信息
+func GetUser(ctx context.Context, req *core.DouyinUserRequest) (*core.User, error) {
+
+	resp, err := userClient.GetUser(ctx, req)
+	userInfo := resp.User
+
+	if err != nil {
+		return userInfo, err
+	}
+
+	if resp.BaseResp.StatusCode != 0 {
+		return userInfo, errno.NewErrNo(resp.BaseResp.StatusCode, *resp.BaseResp.StatusMsg)
+	}
+
+	return userInfo, nil
 }

@@ -1,6 +1,7 @@
 package jwt
 
 import (
+	"errors"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -15,11 +16,11 @@ type JwtClaims struct {
 
 var (
 	//盐
-	secret = []byte("wondersafebox") // 后续加密增加盐增加复杂度
-	// TokenExpired     error = errors.New("Token is expired")            // token错误类型提炼
-	// TokenNotValidYet error = errors.New("Token not active yet")        // token错误类型提炼
-	// TokenMalformed   error = errors.New("That's not even a token")     // token错误类型提炼
-	// TokenInvalid     error = errors.New("Couldn't handle this token:") // token错误类型提炼
+	secret                 = []byte("wondersafebox")                   // 后续加密增加盐增加复杂度
+	TokenExpired     error = errors.New("Token is expired")            // token失效
+	TokenNotValidYet error = errors.New("Token not active yet")        // token未激活
+	TokenMalformed   error = errors.New("That's not even a token")     // 非token格式
+	TokenInvalid     error = errors.New("Couldn't handle this token:") // 未知错误
 )
 
 // CreateJwtToken 生成一个jwttoken
@@ -54,18 +55,18 @@ func ParseJwtToken(jwtToken string) (*JwtClaims, error) {
 	})
 	if err != nil {
 		// 细化token解析错误
-		// if ve, ok := err.(*jwt.ValidationError); ok {
-		// 	if ve.Errors&jwt.ValidationErrorMalformed != 0 {
-		// 		return nil, TokenMalformed
-		// 	} else if ve.Errors&jwt.ValidationErrorExpired != 0 {
-		// 		// Token is expired
-		// 		return nil, TokenExpired
-		// 	} else if ve.Errors&jwt.ValidationErrorNotValidYet != 0 {
-		// 		return nil, TokenNotValidYet
-		// 	} else {
-		// 		return nil, TokenInvalid
-		// 	}
-		// }
+		if ve, ok := err.(*jwt.ValidationError); ok {
+			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
+				return nil, TokenMalformed
+			} else if ve.Errors&jwt.ValidationErrorExpired != 0 {
+				// Token is expired
+				return nil, TokenExpired
+			} else if ve.Errors&jwt.ValidationErrorNotValidYet != 0 {
+				return nil, TokenNotValidYet
+			} else {
+				return nil, TokenInvalid
+			}
+		}
 		return nil, err
 	}
 	return jwtclaim, nil

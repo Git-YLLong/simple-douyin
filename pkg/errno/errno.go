@@ -14,6 +14,8 @@ const (
 	LoginErrCode            = 10003
 	UserNotExistErrCode     = 10004
 	UserAlreadyExistErrCode = 10005
+	TokenErrCode            = 10006
+	ParamErrCode2           = 10007
 )
 
 type ErrNo struct {
@@ -38,10 +40,12 @@ func (e ErrNo) WithMessage(msg string) ErrNo {
 var (
 	Success             = NewErrNo(SuccessCode, "Success")
 	ServiceErr          = NewErrNo(ServiceErrCode, "Service is unable to start successfully")
-	ParamErr            = NewErrNo(ParamErrCode, "Wrong Parameter has been given")
-	LoginErr            = NewErrNo(LoginErrCode, "Wrong username or password")
-	UserNotExistErr     = NewErrNo(UserNotExistErrCode, "User does not exists")
-	UserAlreadyExistErr = NewErrNo(UserAlreadyExistErrCode, "User already exists")
+	ParamErr            = NewErrNo(ParamErrCode, "用户名或密码不能为空")
+	LoginErr            = NewErrNo(LoginErrCode, "密码错误")
+	UserNotExistErr     = NewErrNo(UserNotExistErrCode, "用户不存在")
+	UserAlreadyExistErr = NewErrNo(UserAlreadyExistErrCode, "用户已经存在")
+	TokenErr            = NewErrNo(TokenErrCode, "token错误")
+	ParamErr2           = NewErrNo(ParamErrCode2, "参数错误")
 )
 
 // 把error转换为error类型
